@@ -1,8 +1,6 @@
-package main
+package step2
 
 import (
-	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -24,8 +22,7 @@ var mapping = map[string]string{
 	"nine":  "9",
 }
 
-func main() {
-	input := os.Args[1]
+func Solve(input string) int {
 	lines := strings.Split(input, "\n")
 
 	sum := 0
@@ -40,11 +37,10 @@ func main() {
 		}
 
 		amount, _ := strconv.Atoi(first + last)
-
 		sum += amount
 	}
 
-	fmt.Println(sum)
+	return sum
 }
 
 func reverse(value string) string {

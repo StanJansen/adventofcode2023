@@ -1,8 +1,6 @@
-package main
+package step1
 
 import (
-	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -10,20 +8,15 @@ import (
 
 var regex = regexp.MustCompile("[0-9]")
 
-func main() {
-	input := os.Args[1]
+func Solve(input string) int {
 	lines := strings.Split(input, "\n")
 
 	sum := 0
 	for _, line := range lines {
 		matches := regex.FindAllString(line, -1)
-		first := matches[0]
-		last := matches[len(matches)-1]
-
-		amount, _ := strconv.Atoi(first + last)
-
+		amount, _ := strconv.Atoi(matches[0] + matches[len(matches)-1])
 		sum += amount
 	}
 
-	fmt.Println(sum)
+	return sum
 }
