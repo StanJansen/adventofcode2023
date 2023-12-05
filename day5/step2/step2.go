@@ -5,45 +5,72 @@ import (
 	"strings"
 )
 
-var seedParts []string
+var seeds [][2]uint64
 var mappings [][][3]uint64
 
 func Solve(input string) uint64 {
 	parseInput(input)
 
-	lowest := uint64(0)
-	for i := 0; i < len(seedParts); i += 2 {
-		s1, _ := strconv.Atoi(seedParts[i])
-		s2, _ := strconv.Atoi(seedParts[i+1])
-		for j := s1; j < s1+s2; j++ {
-			r := solveSeed(uint64(j))
-			if lowest == 0 || lowest > r {
-				lowest = r
-			}
+	source := seeds
+	for _, mapping := range mappings {
+		newSource := [][2]uint64{}
+		for _, s := range source {
+			vs := applyMapping(s, mapping)
+
+			newSource = append(newSource, vs...)
+		}
+		source = newSource
+	}
+
+	min := uint64(source[0][0])
+
+	for _, i := range source {
+		if 0 != i[0] && min > i[0] {
+			min = i[0]
 		}
 	}
 
-	return lowest
+	return min
 }
 
-func solveSeed(seed uint64) uint64 {
-	for _, mapping := range mappings {
-		for _, m := range mapping {
-			if seed >= m[1] && seed < m[1]+m[2] {
-				seed = m[0] + seed - m[1]
-				break
+func applyMapping(s [2]uint64, mapping [][3]uint64) [][2]uint64 {
+	vs := [][2]uint64{}
+
+	for _, m := range mapping {
+		if (s[0] >= m[1] && s[0] < m[1]+m[2]) || (s[1] >= m[1] && s[1] < m[1]+m[2]) || (s[0] < m[1] && s[1] >= m[1]+m[2]) {
+			mi := max([]uint64{s[0], m[1]})
+			ma := min([]uint64{s[1], m[1] + m[2] - 1})
+			if mi > s[0] {
+				vs = append(vs, applyMapping([2]uint64{s[0], mi - 1}, mapping)...)
 			}
+			vs = append(vs, [2]uint64{
+				m[0] + (mi - m[1]),
+				m[0] + (ma - m[1]),
+			})
+			if ma < s[1] {
+				vs = append(vs, applyMapping([2]uint64{ma + 1, s[1]}, mapping)...)
+			}
+			break
 		}
 	}
 
-	return seed
+	if len(vs) == 0 {
+		vs = append(vs, s)
+	}
+
+	return vs
 }
 
 func parseInput(input string) {
 	lines := strings.Split(input+"\n", "\n")
 
 	sLine := strings.Replace(lines[0], "seeds: ", "", 1)
-	seedParts = strings.Split(sLine, " ")
+	sParts := strings.Split(sLine, " ")
+	for i := 0; i < len(sParts); i += 2 {
+		s1, _ := strconv.Atoi(sParts[i])
+		s2, _ := strconv.Atoi(sParts[i+1])
+		seeds = append(seeds, [2]uint64{uint64(s1), uint64(s1 + s2 - 1)})
+	}
 
 	var mapping [][3]uint64
 	for _, line := range lines[2:] {
@@ -65,4 +92,28 @@ func parseInput(input string) {
 		}
 		mapping = append(mapping, mappingLine)
 	}
+}
+
+func min(source []uint64) uint64 {
+	min := source[0]
+
+	for _, i := range source {
+		if min > i {
+			min = i
+		}
+	}
+
+	return min
+}
+
+func max(source []uint64) uint64 {
+	max := source[0]
+
+	for _, i := range source {
+		if max < i {
+			max = i
+		}
+	}
+
+	return max
 }
