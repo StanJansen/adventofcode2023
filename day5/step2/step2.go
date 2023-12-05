@@ -3,44 +3,25 @@ package step2
 import (
 	"strconv"
 	"strings"
-	"sync"
 )
 
 var seedParts []string
 var mappings [][][3]uint64
-var wg = sync.WaitGroup{}
-var mtx = sync.Mutex{}
 
 func Solve(input string) uint64 {
 	parseInput(input)
 
-	idx := 0
-	swg := sync.WaitGroup{}
 	lowest := uint64(0)
 	for i := 0; i < len(seedParts); i += 2 {
 		s1, _ := strconv.Atoi(seedParts[i])
 		s2, _ := strconv.Atoi(seedParts[i+1])
 		for j := s1; j < s1+s2; j++ {
-			wg.Add(1)
-			swg.Add(1)
-			go func(s uint64) {
-				r := solveSeed(s)
-				mtx.Lock()
-				defer mtx.Unlock()
-				if lowest == 0 || lowest > r {
-					lowest = r
-				}
-				wg.Done()
-				swg.Done()
-			}(uint64(j))
-			if idx%10000 == 0 {
-				swg.Wait()
+			r := solveSeed(uint64(j))
+			if lowest == 0 || lowest > r {
+				lowest = r
 			}
-			idx++
 		}
 	}
-
-	wg.Wait()
 
 	return lowest
 }
