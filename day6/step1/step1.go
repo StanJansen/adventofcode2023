@@ -7,11 +7,9 @@ import (
 	"strings"
 )
 
-type Solver struct{}
-
 var regex = regexp.MustCompile("\\d+")
 
-func (Solver) Solve(input string) int {
+func Solve(input string) int {
 	lines := strings.Split(input, "\n")
 	times := regex.FindAllString(lines[0], -1)
 	distances := regex.FindAllString(lines[1], -1)
@@ -20,9 +18,8 @@ func (Solver) Solve(input string) int {
 	for idx, time := range times {
 		t, _ := strconv.ParseFloat(time, 10)
 		d, _ := strconv.ParseFloat(distances[idx], 10)
-		sq := math.Sqrt(t*t - 4.0*d)
-
-		c := int(math.Abs(math.Ceil((-t-sq)/2.0) - math.Floor((-t+sq)/2.0)))
+		sq := math.Sqrt(t*t - 4*d)
+		c := int(math.Abs(math.Ceil((-t-sq)/2) - math.Floor((-t+sq)/2)))
 		if 0 == p {
 			p = c
 		} else {

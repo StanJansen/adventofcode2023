@@ -5,12 +5,10 @@ import (
 	"strings"
 )
 
-type Solver struct{}
-
 var seeds [][2]uint64
 var mappings [][][3]uint64
 
-func (Solver) Solve(input string) int {
+func Solve(input string) int {
 	parseInput(input)
 
 	source := seeds

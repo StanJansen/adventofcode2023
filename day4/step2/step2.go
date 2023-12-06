@@ -6,58 +6,57 @@ import (
 	"strings"
 )
 
-type Solver struct{}
-
-var cards []string
-var sums = map[int]int{}
-
-func (Solver) Solve(input string) int {
-	cards = strings.Split(input, "\n")
-
-	return solveCards(cards)
+type cardResult struct {
+	gameNr int
+	sum    int
 }
 
-func solveCards(c []string) int {
-	sum := len(c)
-	for _, card := range c {
-		gameNr, cSum := solveCard(card)
+var cards = []*cardResult{}
+var sums = map[int]int{}
+var sum = 0
 
-		if cSum > 0 {
-			sum += solveCards(cards[gameNr : gameNr+cSum])
-		}
+func Solve(input string) int {
+	lines := strings.Split(strings.ReplaceAll(input, "Card ", ""), "\n")
+
+	for _, line := range lines {
+		cardParts := strings.Split(line, ":")
+		gameNr, _ := strconv.Atoi(strings.TrimLeft(cardParts[0], " "))
+		card := cardResult{gameNr, 0}
+		cards = append(cards, &card)
+		solveCard(&card, cardParts[1])
 	}
+
+	solveCards(cards)
+
 	return sum
 }
 
-func solveCard(card string) (int, int) {
-	cardParts := strings.Split(card, ":")
-	gameNr, _ := strconv.Atoi(strings.ReplaceAll(strings.Replace(cardParts[0], "Card ", "", 1), " ", ""))
-	if sum, ok := sums[gameNr]; ok {
-		return gameNr, sum
+func solveCards(c []*cardResult) {
+	sum += len(c)
+	for _, card := range c {
+		if card.sum > 0 {
+			solveCards(cards[card.gameNr : card.gameNr+card.sum])
+		}
 	}
+}
 
-	card = cardParts[1]
-	parts := strings.Split(card, "|")
+func solveCard(card *cardResult, input string) {
+	parts := strings.Split(input, "|")
 
 	wNumbers := parseDigits(parts[0])
 	cNumbers := parseDigits(parts[1])
 
-	sum := 0
 	for _, n := range cNumbers {
 		if slices.Contains(wNumbers, n) {
-			sum++
+			card.sum++
 		}
 	}
-
-	sums[gameNr] = sum
-
-	return gameNr, sum
 }
 
 func parseDigits(input string) []int {
 	digits := []int{}
 	for _, char := range strings.Split(input, " ") {
-		char = strings.ReplaceAll(char, " ", "")
+		char = strings.Trim(char, " ")
 		if char == "" {
 			continue
 		}

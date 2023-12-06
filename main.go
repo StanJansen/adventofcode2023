@@ -23,17 +23,7 @@ func main() {
 		ss = solvers.Solvers[day-1 : day]
 	}
 
-	t := table.NewWriter()
-	t.SetStyle(table.StyleDouble)
-	t.Style().Title.Align = text.AlignCenter
-	t.Style().Title.Colors = text.Colors{text.Bold}
-	t.Style().Options.SeparateRows = true
-	t.Style().Format.Header = text.FormatDefault
-	t.Style().Format.Footer = text.FormatDefault
-	t.SetTitle("🎄 Advent of Code 2023 🎄")
-
-	rc := table.RowConfig{AutoMerge: true}
-	t.AppendHeader(table.Row{"Day", "Part 1", "Part 1", "Part 2", "Part 2"}, rc)
+	t := setupTable()
 
 	for i, s := range ss {
 		d := day
@@ -42,14 +32,32 @@ func main() {
 		}
 		c, _ := f.ReadFile(fmt.Sprintf("input/%d", d))
 		input := string(c)
-		t1 := time.Now()
-		r1 := s[0].Solve(input)
-		t2 := time.Now()
-		r2 := s[1].Solve(input)
+		r1, t1 := solve(s[0], input)
+		r2, t2 := solve(s[1], input)
 		t.AppendRows([]table.Row{
-			{d, r1, time.Since(t1), r2, time.Since(t2)},
+			{d, r1, t1, r2, t2},
 		})
 	}
 
 	fmt.Println(t.Render())
+}
+
+func solve(function func(string) int, input string) (int, time.Duration) {
+	t := time.Now()
+	r := function(input)
+	return r, time.Since(t)
+}
+
+func setupTable() table.Writer {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleDouble)
+	t.Style().Title.Align = text.AlignCenter
+	t.Style().Title.Colors = text.Colors{text.Bold}
+	t.Style().Options.SeparateRows = true
+	t.Style().Format.Header = text.FormatDefault
+	t.Style().Format.Footer = text.FormatDefault
+	t.SetTitle("🎄 Advent of Code 2023 🎄")
+	t.AppendHeader(table.Row{"Day", "Part 1", "Part 1", "Part 2", "Part 2"}, table.RowConfig{AutoMerge: true})
+
+	return t
 }

@@ -15,15 +15,11 @@ import (
 	d6s2 "github.com/StanJansen/adventofcode2023/day6/step2"
 )
 
-type Solver interface {
-	Solve(input string) int
-}
-
-var Solvers = [][2]Solver{
-	{d1s1.Solver{}, d1s2.Solver{}},
-	{d2s1.Solver{}, d2s2.Solver{}},
-	{d3s1.Solver{}, d3s2.Solver{}},
-	{d4s1.Solver{}, d4s2.Solver{}},
-	{d5s1.Solver{}, d5s2.Solver{}},
-	{d6s1.Solver{}, d6s2.Solver{}},
+var Solvers = [][2]func(input string) int{
+	{d1s1.Solve, d1s2.Solve},
+	{d2s1.Solve, d2s2.Solve},
+	{d3s1.Solve, d3s2.Solve},
+	{d4s1.Solve, d4s2.Solve},
+	{d5s1.Solve, d5s2.Solve},
+	{d6s1.Solve, d6s2.Solve},
 }
