@@ -7,7 +7,9 @@ import (
 	"strings"
 )
 
-func Solve(input string) int {
+type Solver struct{}
+
+func (Solver) Solve(input string) int {
 	cards := strings.Split(input, "\n")
 
 	sum := 0

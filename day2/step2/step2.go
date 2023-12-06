@@ -6,9 +6,11 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var colors = []string{"red", "green", "blue"}
 
-func Solve(input string) int {
+func (Solver) Solve(input string) int {
 	lines := strings.Split(input, "\n")
 
 	sum := 0

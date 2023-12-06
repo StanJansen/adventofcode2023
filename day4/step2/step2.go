@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var cards []string
 var sums = map[int]int{}
 
-func Solve(input string) int {
+func (Solver) Solve(input string) int {
 	cards = strings.Split(input, "\n")
 
 	return solveCards(cards)

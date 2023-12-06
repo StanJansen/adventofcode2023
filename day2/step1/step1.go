@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var regexes = [3]*regexp.Regexp{
 	regexp.MustCompile("(Game \\d{1,}).*([2-9][0-9]|1[3-9]|\\d{3,})( red).*\n"),
 	regexp.MustCompile("(Game \\d{1,}).*([2-9][0-9]|1[4-9]|\\d{3,})( green).*\n"),
@@ -13,7 +15,7 @@ var regexes = [3]*regexp.Regexp{
 }
 var gamer = regexp.MustCompile("Game (\\d{1,})")
 
-func Solve(input string) int {
+func (Solver) Solve(input string) int {
 	input = input + string('\n')
 	for _, r := range regexes {
 		input = r.ReplaceAllString(input, "")

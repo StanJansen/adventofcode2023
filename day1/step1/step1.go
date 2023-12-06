@@ -6,9 +6,11 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var regex = regexp.MustCompile("[0-9]")
 
-func Solve(input string) int {
+func (Solver) Solve(input string) int {
 	lines := strings.Split(input, "\n")
 
 	sum := 0

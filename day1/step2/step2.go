@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var chars = "zero|one|two|three|four|five|six|seven|eight|nine"
 var regex = regexp.MustCompile("[0-9]|" + chars)
 var reverseRegex = regexp.MustCompile("[0-9]|" + reverse(chars))
@@ -22,7 +24,7 @@ var mapping = map[string]string{
 	"nine":  "9",
 }
 
-func Solve(input string) int {
+func (Solver) Solve(input string) int {
 	lines := strings.Split(input, "\n")
 
 	sum := 0

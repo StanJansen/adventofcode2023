@@ -5,10 +5,12 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var seeds [][2]uint64
 var mappings [][][3]uint64
 
-func Solve(input string) uint64 {
+func (Solver) Solve(input string) int {
 	parseInput(input)
 
 	source := seeds
@@ -30,7 +32,7 @@ func Solve(input string) uint64 {
 		}
 	}
 
-	return min
+	return int(min)
 }
 
 func applyMapping(s [2]uint64, mapping [][3]uint64) [][2]uint64 {

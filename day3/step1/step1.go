@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+type Solver struct{}
+
 var dRegex = regexp.MustCompile("\\d+")
 var sRegex = regexp.MustCompile("[^0-9.]")
 
-func Solve(input string) int {
+func (Solver) Solve(input string) int {
 	lines := strings.Split(input, "\n")
 
 	sIdxs := map[int][][]int{}
