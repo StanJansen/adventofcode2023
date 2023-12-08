@@ -1,7 +1,6 @@
 package step1
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -75,10 +74,6 @@ func parseLine(line string) (index string, bid int) {
 	default:
 		// High card
 		index = "0" + index
-	}
-
-	if symbols == "88JJJ" {
-		fmt.Println(index, bid)
 	}
 
 	return
