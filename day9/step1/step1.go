@@ -18,13 +18,14 @@ func Solve(input string) int {
 }
 
 func solveLine(line string) int {
+	var result int
 	var nrs []int
 	for _, v := range strings.Split(line, " ") {
 		nr, _ := strconv.Atoi(v)
 		nrs = append(nrs, nr)
 	}
 
-	lastVals := []int{nrs[len(nrs)-1]}
+	result += nrs[len(nrs)-1]
 	for {
 		var row []int
 		isLastRow := true
@@ -36,18 +37,13 @@ func solveLine(line string) int {
 			}
 		}
 
-		lastVals = append(lastVals, row[len(row)-1])
+		result += row[len(row)-1]
 
 		if isLastRow {
 			break
 		}
 
 		nrs = row
-	}
-
-	result := 0
-	for i := len(lastVals) - 1; i >= 0; i-- {
-		result += lastVals[i]
 	}
 
 	return result
