@@ -39,29 +39,31 @@ func Solve(input string) int {
 
 	sum := 0
 	for y := 0; y < len(grid); y++ {
-		line := string(grid[y])
-		for x := 0; x < len(grid[y]); x++ {
-			if _, ok := pipeCoords[y]; !ok || pipeCoords[y][x] {
-				continue
-			}
+		if _, ok := pipeCoords[y]; !ok {
+			continue
+		}
 
-			subLine := ""
-			for i, char := range line[:x] {
-				if pipeCoords[y][i] {
-					subLine += string(char)
-				} else {
-					subLine += "."
+		line := ""
+		for x, char := range grid[y] {
+			if pipeCoords[y][x] {
+				if char != '-' {
+					line += string(char)
 				}
+			} else {
+				line += "."
 			}
+		}
 
-			subLine = strings.ReplaceAll(subLine, "-", "")
-			subLine = strings.ReplaceAll(subLine, "L7", "|")
-			subLine = strings.ReplaceAll(subLine, "FJ", "|")
-			subLine = strings.ReplaceAll(subLine, "LJ", "")
-			subLine = strings.ReplaceAll(subLine, "F7", "")
+		line = strings.ReplaceAll(line, "L7", "|")
+		line = strings.ReplaceAll(line, "FJ", "|")
+		line = strings.ReplaceAll(line, "LJ", "")
+		line = strings.ReplaceAll(line, "F7", "")
 
-			pipeCount := strings.Count(subLine, "|")
-			if pipeCount%2 == 1 {
+		isOdd := false
+		for _, char := range line {
+			if char == '|' {
+				isOdd = !isOdd
+			} else if char == '.' && isOdd {
 				sum++
 			}
 		}
