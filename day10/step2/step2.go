@@ -56,8 +56,6 @@ func Solve(input string) int {
 
 		line = strings.ReplaceAll(line, "L7", "|")
 		line = strings.ReplaceAll(line, "FJ", "|")
-		line = strings.ReplaceAll(line, "LJ", "")
-		line = strings.ReplaceAll(line, "F7", "")
 
 		isOdd := false
 		for _, char := range line {
