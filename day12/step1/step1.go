@@ -1,4 +1,4 @@
-package step1
+package step2
 
 import (
 	"strconv"
@@ -6,18 +6,19 @@ import (
 )
 
 const (
-	UNSOLVED = -1
+	UNSOLVED     = -1
+	UNFOLD_COUNT = 5
 )
 
 type SolutionInput struct {
-	Chars     string
-	Groups    []int
-	CharIdx   int
-	GroupIdx  int
+	Chars     []rune
+	Groups    []byte
+	CharIdx   byte
+	GroupIdx  byte
 	Solutions [][]int
 }
 
-func (input *SolutionInput) withIndexes(charIdx, groupIdx int) *SolutionInput {
+func (input *SolutionInput) withIndexes(charIdx, groupIdx byte) *SolutionInput {
 	return &SolutionInput{Chars: input.Chars, Groups: input.Groups, CharIdx: charIdx, GroupIdx: groupIdx, Solutions: input.Solutions}
 }
 
@@ -42,11 +43,11 @@ func Solve(input string) int {
 
 func solveLine(idx int, line string) int {
 	parts := strings.Split(line, " ")
-	input := &SolutionInput{Chars: parts[0]}
+	input := &SolutionInput{Chars: []rune(parts[0])}
 
 	for _, group := range strings.Split(parts[1], ",") {
 		v, _ := strconv.Atoi(group)
-		input.Groups = append(input.Groups, v)
+		input.Groups = append(input.Groups, byte(v))
 	}
 
 	input.Solutions = make([][]int, len(input.Chars))
@@ -61,8 +62,8 @@ func solveLine(idx int, line string) int {
 }
 
 func (input *SolutionInput) getCount() (count int) {
-	if input.CharIdx >= len(input.Chars) {
-		if input.GroupIdx >= len(input.Groups) {
+	if input.CharIdx >= byte(len(input.Chars)) {
+		if input.GroupIdx >= byte(len(input.Groups)) {
 			count++
 		}
 		return
@@ -79,11 +80,11 @@ func (input *SolutionInput) getCount() (count int) {
 		count += input.withIndexes(input.CharIdx+1, input.GroupIdx).getCount()
 	}
 
-	if input.GroupIdx >= len(input.Groups) {
+	if input.GroupIdx >= byte(len(input.Groups)) {
 		return
 	}
 
-	var matches int
+	var matches byte
 	for _, char := range input.Chars[input.CharIdx:] {
 		if char == '.' || (char == '?' && matches == input.Groups[input.GroupIdx]) {
 			break
@@ -95,7 +96,7 @@ func (input *SolutionInput) getCount() (count int) {
 	}
 
 	nextIdx := input.CharIdx + matches
-	if nextIdx < len(input.Chars) && input.Chars[nextIdx] != '#' {
+	if nextIdx < byte(len(input.Chars)) && input.Chars[nextIdx] != '#' {
 		nextIdx++
 	}
 
