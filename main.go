@@ -55,7 +55,6 @@ func setupTable() table.Writer {
 	t.Style().Title.Colors = text.Colors{text.Bold}
 	t.Style().Options.SeparateRows = true
 	t.Style().Format.Header = text.FormatDefault
-	t.Style().Format.Footer = text.FormatDefault
 	t.SetTitle("🎄 Advent of Code 2023 🎄")
 	t.AppendHeader(table.Row{"Day", "Part 1", "Part 1", "Part 2", "Part 2"}, table.RowConfig{AutoMerge: true})
 

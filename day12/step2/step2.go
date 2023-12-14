@@ -1,6 +1,7 @@
 package step2
 
 import (
+	"bytes"
 	"strconv"
 	"strings"
 )
@@ -11,7 +12,7 @@ const (
 )
 
 type SolutionInput struct {
-	Chars     []rune
+	Chars     []byte
 	Groups    []byte
 	CharIdx   byte
 	GroupIdx  byte
@@ -43,7 +44,7 @@ func Solve(input string) int {
 
 func solveLine(idx int, line string) int {
 	parts := strings.Split(line, " ")
-	input := &SolutionInput{Chars: []rune(parts[0])}
+	input := &SolutionInput{Chars: []byte(parts[0])}
 
 	for _, group := range strings.Split(parts[1], ",") {
 		v, _ := strconv.Atoi(group)
@@ -64,21 +65,9 @@ func solveLine(idx int, line string) int {
 }
 
 func (input *SolutionInput) unfold() {
-	var chars []rune
-	groups := make([]byte, len(input.Groups)*UNFOLD_COUNT)
-	for i := 0; i < UNFOLD_COUNT; i++ {
-		for cIdx, char := range input.Chars {
-			if i > 0 && cIdx == 0 {
-				chars = append(chars, '?')
-			}
-			chars = append(chars, char)
-		}
-		for gIdx, group := range input.Groups {
-			groups[gIdx+(len(input.Groups)*i)] = group
-		}
-	}
-	input.Chars = chars
-	input.Groups = groups
+	input.Groups = bytes.Repeat(input.Groups, UNFOLD_COUNT)
+	input.Chars = bytes.Repeat(append(input.Chars, '?'), UNFOLD_COUNT)
+	input.Chars = input.Chars[:len(input.Chars)-1]
 }
 
 func (input *SolutionInput) getCount() (count int) {
