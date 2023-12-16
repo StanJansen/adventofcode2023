@@ -26,7 +26,7 @@ x:
 	points := make([]Point, strings.Count(input, "#"))
 	var point, extraY int
 	for y, line := range lines {
-		if !strings.Contains(line, "#") {
+		if !strings.ContainsRune(line, '#') {
 			extraY += multiplier - 1
 			continue
 		}
