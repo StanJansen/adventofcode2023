@@ -2,7 +2,7 @@ package day16
 
 type Tiles [][]byte
 type Direction int
-type Visited map[int8]map[int8]map[Direction]bool
+type Visited [][][4]bool
 
 const (
 	UP    = Direction(0)
@@ -13,48 +13,40 @@ const (
 
 func (t Tiles) Energized(startX, startY int8, d Direction) int {
 	v := make(Visited, len(t))
-	for y := range t {
-		v[int8(y)] = make(map[int8]map[Direction]bool, len(t[y]))
-		for x := range t[y] {
-			v[int8(y)][int8(x)] = make(map[Direction]bool, 4)
-		}
-	}
-	t.visit(startX, startY, d, v)
-
-	sum := 0
 	for y := range v {
-		for x := range v[y] {
-			for d := range v[y][x] {
-				if v[y][x][d] {
-					sum++
-					break
-				}
-			}
-		}
+		v[y] = make([][4]bool, len(t[y]))
 	}
-	return sum
+	return t.visit(startX, startY, d, v)
 }
 
-func (t Tiles) visit(x, y int8, d Direction, v Visited) {
+func (t Tiles) visit(x, y int8, d Direction, v Visited) (visited int) {
 	if x < 0 || y < 0 || y >= int8(len(t)) || x >= int8(len(t[y])) {
 		return
 	}
 	if v[y][x][d] {
 		return
 	}
+
+	visited++
+	for _, b := range v[y][x] {
+		if b {
+			visited--
+			break
+		}
+	}
 	v[y][x][d] = true
 
 	switch t[y][x] {
 	case '-':
 		if d == UP || d == DOWN {
-			t.visit(x-1, y, LEFT, v)
-			t.visit(x+1, y, RIGHT, v)
+			visited += t.visit(x-1, y, LEFT, v)
+			visited += t.visit(x+1, y, RIGHT, v)
 			return
 		}
 	case '|':
 		if d == LEFT || d == RIGHT {
-			t.visit(x, y-1, UP, v)
-			t.visit(x, y+1, DOWN, v)
+			visited += t.visit(x, y-1, UP, v)
+			visited += t.visit(x, y+1, DOWN, v)
 			return
 		}
 	case '\\':
@@ -81,17 +73,16 @@ func (t Tiles) visit(x, y int8, d Direction, v Visited) {
 		}
 	}
 
-	nextX, nextY := x, y
 	switch d {
 	case UP:
-		nextY--
+		y--
 	case RIGHT:
-		nextX++
+		x++
 	case DOWN:
-		nextY++
+		y++
 	case LEFT:
-		nextX--
+		x--
 	}
 
-	t.visit(nextX, nextY, d, v)
+	return visited + t.visit(x, y, d, v)
 }
