@@ -69,6 +69,9 @@ func Solve(input string, minStraight, maxStraight byte) int {
 
 		hl := cities[point.Y][point.X] + queued.HeatLoss
 		if point == end {
+			if step.Straight < minStraight {
+				continue
+			}
 			return hl - cities[0][0]
 		}
 
