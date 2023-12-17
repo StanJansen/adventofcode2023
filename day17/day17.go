@@ -60,9 +60,7 @@ func CreateMap(grid [][]byte) Map {
 }
 
 func InitPQ() *priorityqueue.Queue {
-	pq := priorityqueue.NewWith(func(a, b any) int {
-		return a.(Queued).TotalHeatLoss - b.(Queued).TotalHeatLoss
-	})
+	pq := priorityqueue.NewWith(PQComparator)
 
 	// Start from top left, go both right and down
 	pq.Enqueue(Queued{Step{
@@ -77,6 +75,10 @@ func InitPQ() *priorityqueue.Queue {
 	}, 0})
 
 	return pq
+}
+
+func PQComparator(a, b interface{}) int {
+	return a.(Queued).TotalHeatLoss - b.(Queued).TotalHeatLoss
 }
 
 func (m Map) FindPath(end Point, minStraight, maxStraight byte) int {
