@@ -30,10 +30,10 @@ type Queued struct {
 type Direction byte
 
 const (
-	UP    = Direction(1)
-	DOWN  = Direction(2)
-	LEFT  = Direction(3)
-	RIGHT = Direction(4)
+	UP    = Direction(0)
+	DOWN  = Direction(1)
+	LEFT  = Direction(2)
+	RIGHT = Direction(3)
 )
 
 func Solve(input string, minStraight, maxStraight byte) int {
@@ -82,13 +82,16 @@ func PQComparator(a, b interface{}) int {
 }
 
 func (m Map) FindPath(end Point, minStraight, maxStraight byte) int {
-	cache := make(map[Step]int)
+	cache := make([][][10][4]int, len(m.Cities))
+	for y := range m.Cities {
+		cache[y] = make([][10][4]int, len(m.Cities[y]))
+	}
 	for {
 		q, _ := m.PQ.Dequeue()
 		queued := q.(Queued)
 		step := queued.Step
 		point := step.Point
-		if point.Y < 0 || point.Y >= len(m.Cities) || point.X < 0 || point.X >= len(m.Cities[0]) {
+		if point.Y < 0 || point.Y > end.Y || point.X < 0 || point.X > end.X {
 			// Out of bounds
 			continue
 		}
@@ -104,13 +107,11 @@ func (m Map) FindPath(end Point, minStraight, maxStraight byte) int {
 		}
 
 		// Check cache
-		if v, ok := cache[step]; ok {
-			if v <= hl {
-				// Less efficient than a cached path
-				continue
-			}
+		if cache[point.Y][point.X][step.Straight-1][step.Direction] != 0 && cache[point.Y][point.X][step.Straight-1][step.Direction] <= hl {
+			// Less efficient than a cached path
+			continue
 		}
-		cache[step] = hl
+		cache[point.Y][point.X][step.Straight-1][step.Direction] = hl
 
 		// Only allow a straight path if it's below the max
 		if step.Straight < maxStraight {
