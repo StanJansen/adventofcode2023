@@ -25,6 +25,8 @@ import (
 	d19s2 "github.com/StanJansen/adventofcode2023/day19/step2"
 	d2s1 "github.com/StanJansen/adventofcode2023/day2/step1"
 	d2s2 "github.com/StanJansen/adventofcode2023/day2/step2"
+	d20s1 "github.com/StanJansen/adventofcode2023/day20/step1"
+	d20s2 "github.com/StanJansen/adventofcode2023/day20/step2"
 	d3s1 "github.com/StanJansen/adventofcode2023/day3/step1"
 	d3s2 "github.com/StanJansen/adventofcode2023/day3/step2"
 	d4s1 "github.com/StanJansen/adventofcode2023/day4/step1"
@@ -61,4 +63,5 @@ var Solvers = [][2]func(input string) int{
 	{d17s1.Solve, d17s2.Solve},
 	{d18s1.Solve, d18s2.Solve},
 	{d19s1.Solve, d19s2.Solve},
+	{d20s1.Solve, d20s2.Solve},
 }
