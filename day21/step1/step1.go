@@ -9,8 +9,9 @@ const STEPS = 64
 
 type Garden struct {
 	Grid        [][]byte
-	StartPoints [][2]int
-	Seen        map[[2]int]bool
+	StartPoints [][2]byte
+	Seen        map[[2]byte]bool
+	Size        byte
 }
 
 func Solve(input string) int {
@@ -29,23 +30,24 @@ func createGarden(input string) Garden {
 
 	return Garden{
 		Grid:        grid,
-		StartPoints: [][2]int{{startX, (startIdx - startX) / len(grid[0])}},
+		StartPoints: [][2]byte{{byte(startX), byte((startIdx - startX) / len(grid[0]))}},
+		Size:        byte(len(grid) - 1),
 	}
 }
 
 func (g *Garden) TakeStep() {
-	sp := [][2]int{}
-	g.Seen = make(map[[2]int]bool, len(g.StartPoints)*4)
+	sp := [][2]byte{}
+	g.Seen = make(map[[2]byte]bool, len(g.StartPoints)*4)
 
 	for _, p := range g.StartPoints {
-		newPoints := [][2]int{
+		newPoints := [][2]byte{
 			{p[0] - 1, p[1]},
 			{p[0] + 1, p[1]},
 			{p[0], p[1] - 1},
 			{p[0], p[1] + 1},
 		}
 		for _, newPoint := range newPoints {
-			if newPoint[0] < 0 || newPoint[0] > len(g.Grid[0])-1 || newPoint[1] < 0 || newPoint[1] > len(g.Grid)-1 {
+			if newPoint[0] < 0 || newPoint[0] > g.Size || newPoint[1] < 0 || newPoint[1] > g.Size {
 				continue
 			}
 			if g.Grid[newPoint[1]][newPoint[0]] == '#' {
