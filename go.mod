@@ -5,6 +5,7 @@ go 1.21.4
 require (
 	github.com/emirpasic/gods v1.18.1
 	github.com/jedib0t/go-pretty/v6 v6.4.9
+	gonum.org/v1/gonum v0.14.0
 )
 
 require (
