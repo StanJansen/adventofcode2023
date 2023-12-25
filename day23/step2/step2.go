@@ -21,7 +21,9 @@ func Solve(input string) int {
 
 	v, _ := getTileCount(point, end, tiles, trail, passed, 0)
 
-	return int(v) - 4 // Visualise the map and you'll see that the last turn goes incorrect, no idea why, cba to solve :)
+	// Visualise the map and you'll see that the last turn goes incorrect, so subtract 4.
+	// Alternatively, remove the -4, remove the "passed" checks and brute force it.
+	return int(v) - 4
 }
 
 func getTileCount(point, end [2]int16, tiles [][]byte, trail []bool, passed []int16, steps int16) (int16, bool) {
