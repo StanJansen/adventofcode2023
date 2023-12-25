@@ -16,6 +16,7 @@ type Node struct {
 	Distance  int
 }
 
+// You might need to run this a few times, it's the lowest amount (this input gives both 2259009 and 562772 for example as results).
 func Solve(input string) int {
 	components := getComponents(input)
 	distances := make(map[string]int)
